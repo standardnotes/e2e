@@ -18,6 +18,8 @@ fi
 
 COMPOSE_FILE="docker-compose.${SUITE}.yml"
 
+SNJS_TAG=$1 && shift 1
+
 function setup {
   echo "# Copying the sample configuration files"
   cp docker/api-gateway.env.sample docker/api-gateway.env
@@ -45,7 +47,6 @@ function startContainers {
   echo "# Pulling latest versions"
   docker compose -f $COMPOSE_FILE pull
 
-  SNJS_TAG=$1 && shift 1
   echo "# Starting standardnotes/snjs:${SNJS_TAG} container"
   docker run -d -p 9001:9001 standardnotes/snjs:$SNJS_TAG
 
