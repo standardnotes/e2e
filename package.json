@@ -6,8 +6,7 @@
     "node": ">=16.0.0 <17.0.0"
   },
   "scripts": {
-    "test:stable-server": "bash test.sh stable-server",
-    "run-suite:headless": "mocha-headless-chrome --timeout 1200000 -f http://localhost:9001/packages/snjs/mocha/test.html"
+    "test:stable-server": "bash test.sh stable-server"
   },
   "devDependencies": {
     "mocha-headless-chrome": "^4.0.0"
