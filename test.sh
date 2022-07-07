@@ -1,13 +1,5 @@
 # !/bin/bash
 
-HOST_OSTYPE=$(uname)
-UID=1001
-GID=1001
-if [ "$HOST_OSTYPE" == "Linux"]; then
-  UID=$(id -u)
-  GID=$(id -g)
-fi
-
 [ -n "${SUITE}" ] || SUITE=$1 && shift 1
 if [ -z "$SUITE" ];
 then
