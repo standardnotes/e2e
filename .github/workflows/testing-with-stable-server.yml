@@ -2,6 +2,11 @@ name: Testing With Stable Server
 
 on:
   workflow_dispatch:
+    inputs:
+      image_tag:
+        type: string
+        default: test
+        description: The Docker image tag used for SNJS container
 
 jobs:
   e2e-tests:
@@ -16,4 +21,4 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Run E2E Test Suite
-        run: yarn test:stable-server
+        run: yarn test:stable-server ${{ inputs.image_tag }}

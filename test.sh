@@ -45,6 +45,10 @@ function startContainers {
   echo "# Pulling latest versions"
   docker compose -f $COMPOSE_FILE pull
 
+  SNJS_TAG=$1 && shift 1
+  echo "# Starting standardnotes/snjs:${SNJS_TAG} container"
+  docker run -d -p 9001:9001 standardnotes/snjs:$SNJS_TAG
+
   echo "# Starting all containers for Test Suite"
   docker compose -f $COMPOSE_FILE up -d
 }
