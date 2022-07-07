@@ -74,7 +74,7 @@ startContainers
 waitForServices
 
 echo "# Starting test suite ..."
-npx mocha-headless-chrome --timeout 1200000 -f http://localhost:9001/packages/snjs/mocha/test.html
+npx mocha-headless-chrome --timeout 1200000 -f http://localhost:9001/mocha/test.html
 test_result=$?
 
 cleanup $test_result
