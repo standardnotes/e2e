@@ -10,10 +10,6 @@ fi
 
 COMPOSE_FILE="docker-compose.${SUITE}.yml"
 
-if [ "$SUITE" == "stable-server"]; then
-  SNJS_TAG=$1 && shift 1
-fi
-
 function setup {
   echo "# Copying the sample configuration files"
   cp docker/api-gateway.env.sample docker/api-gateway.env
@@ -41,7 +37,7 @@ function startContainers {
   echo "# Pulling latest versions"
   docker compose -f $COMPOSE_FILE pull
 
-  if [ "$SUITE" == "stable-server"]; then
+  if [ -n "$SNJS_TAG" ]; then
     echo "# Starting standardnotes/snjs:${SNJS_TAG} container"
     docker run -d -p 9001:9001 standardnotes/snjs:$SNJS_TAG
   fi
@@ -76,7 +72,7 @@ test_result=$?
 
 cleanup $test_result
 
-if [ $test_result == 0 ]
+if [[ $test_result == 0 ]]
 then
   exit 0
 else

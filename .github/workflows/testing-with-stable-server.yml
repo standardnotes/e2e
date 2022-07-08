@@ -21,4 +21,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Run E2E Test Suite
-        run: yarn test:stable-server ${{ inputs.image_tag }}
+        run: yarn test:stable-server
+        env:
+          SNJS_TAG: ${{ inputs.image_tag }}
