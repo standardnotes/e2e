@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test:stable-server": "bash test.sh stable-server",
-    "test:stable-client": "bash test.sh stable-client"
+    "test:stable-client": "bash test.sh stable-client",
+    "test:stable-client-and-server": "bash test.sh stable-client-and-server"
   },
   "devDependencies": {
     "mocha-headless-chrome": "^4.0.0"

@@ -1,0 +1,21 @@
+name: Testing With Stable Client And Server
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Run E2E Test Suite
+        run: yarn test:stable-client-and-server

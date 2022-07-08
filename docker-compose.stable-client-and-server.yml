@@ -1,0 +1,118 @@
+version: '3.8'
+services:
+  snjs:
+    image: standardnotes/snjs
+    ports:
+      - 9001:9001
+
+  db:
+    image: mysql:5.6
+    environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+      MYSQL_ROOT_PASSWORD: testpassword
+    expose:
+      - 3306
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+
+  localstack:
+    image: localstack/localstack
+    expose:
+      - 4566
+    environment:
+      - SERVICES=sns,sqs
+      - DEBUG=1
+      - DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOSTNAME_EXTERNAL=localstack
+    volumes:
+      - ./docker/localstack_bootstrap.sh:/docker-entrypoint-initaws.d/localstack_bootstrap.sh
+      - /tmp/localstack:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  mock-event-publisher:
+    image: standardnotes/mock-event-publisher
+    entrypoint: [
+      "./wait-for.sh", "localstack", "4566",
+      "./docker/entrypoint.sh", "start-web"
+    ]
+    ports:
+      - 3124:3000
+    env_file: docker/mock-event-publisher.env
+
+  cache:
+    image: redis:6.0-alpine
+    expose:
+      - 6379
+
+  syncing-server-js:
+    image: standardnotes/syncing-server-js
+    entrypoint: [
+      "./packages/syncing-server/wait-for.sh", "db", "3306",
+      "./packages/syncing-server/wait-for.sh", "cache", "6379",
+      "./packages/syncing-server/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/syncing-server-js.env
+
+  syncing-server-js-worker:
+    image: standardnotes/syncing-server-js
+    depends_on:
+      - syncing-server-js
+    entrypoint: [
+      "./packages/syncing-server/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/syncing-server/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/syncing-server-js.env
+
+  api-gateway:
+    image: standardnotes/api-gateway
+    depends_on:
+      - syncing-server-js
+      - auth
+    entrypoint: [
+      "./packages/api-gateway/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/api-gateway/wait-for.sh", "auth", "3000",
+      "./packages/api-gateway/wait-for.sh", "files", "3000",
+      "./packages/api-gateway/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/api-gateway.env
+    environment:
+      PORT: 3000
+    ports:
+      - 3123:3000
+
+  auth:
+    image: standardnotes/auth
+    depends_on:
+      - syncing-server-js
+    entrypoint: [
+      "./packages/auth/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/auth/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/auth.env
+
+  auth-worker:
+    image: standardnotes/auth
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/auth/wait-for.sh", "auth", "3000",
+      "./packages/auth/wait-for.sh", "localstack", "4566",
+      "./packages/auth/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/auth.env
+
+  files:
+    image: standardnotes/files
+    entrypoint: [
+      "./packages/files/wait-for.sh", "db", "3306",
+      "./packages/files/wait-for.sh", "cache", "6379",
+      "./packages/files/docker/entrypoint.sh", "start-web"
+    ]
+    ports:
+      - 3125:3000
+    env_file: docker/files.env
+    volumes:
+      - ./docker/uploads:/var/www/dist/src/Infra/FS/tmp

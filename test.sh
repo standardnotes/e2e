@@ -3,7 +3,7 @@
 [ -n "${SUITE}" ] || SUITE=$1 && shift 1
 if [ -z "$SUITE" ];
 then
-  echo "Test suite argument is missing. Please choose stable-server or stable-client"
+  echo "Test suite argument is missing. Please choose stable-server, stable-client or stable-client-and-server"
   usage
   exit 1
 fi
