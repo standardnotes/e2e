@@ -6,7 +6,8 @@
     "node": ">=16.0.0 <17.0.0"
   },
   "scripts": {
-    "test:stable-server": "bash test.sh stable-server"
+    "test:stable-server": "bash test.sh stable-server",
+    "test:stable-client": "bash test.sh stable-client"
   },
   "devDependencies": {
     "mocha-headless-chrome": "^4.0.0"

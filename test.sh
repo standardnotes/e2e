@@ -3,14 +3,16 @@
 [ -n "${SUITE}" ] || SUITE=$1 && shift 1
 if [ -z "$SUITE" ];
 then
-  echo "Test suite argument is missing. Please choose canary, server or client"
+  echo "Test suite argument is missing. Please choose stable-server or stable-client"
   usage
   exit 1
 fi
 
 COMPOSE_FILE="docker-compose.${SUITE}.yml"
 
-SNJS_TAG=$1 && shift 1
+if [ "$SUITE" == "stable-server"]; then
+  SNJS_TAG=$1 && shift 1
+fi
 
 function setup {
   echo "# Copying the sample configuration files"
@@ -39,8 +41,10 @@ function startContainers {
   echo "# Pulling latest versions"
   docker compose -f $COMPOSE_FILE pull
 
-  echo "# Starting standardnotes/snjs:${SNJS_TAG} container"
-  docker run -d -p 9001:9001 standardnotes/snjs:$SNJS_TAG
+  if [ "$SUITE" == "stable-server"]; then
+    echo "# Starting standardnotes/snjs:${SNJS_TAG} container"
+    docker run -d -p 9001:9001 standardnotes/snjs:$SNJS_TAG
+  fi
 
   echo "# Starting all containers for Test Suite"
   docker compose -f $COMPOSE_FILE up -d
