@@ -66,15 +66,19 @@ cleanup 0
 startContainers
 waitForServices
 
-echo "# Starting test suite ..."
-npx mocha-headless-chrome --timeout 1200000 -f http://localhost:9001/mocha/test.html
-test_result=$?
+if [ "$SKIP_TEST_SUITE" != "1" ]; then
+  echo "# Starting test suite ..."
+  npx mocha-headless-chrome --timeout 1200000 -f http://localhost:9001/mocha/test.html
+  test_result=$?
 
-cleanup $test_result
+  cleanup $test_result
 
-if [[ $test_result == 0 ]]
-then
-  exit 0
+  if [[ $test_result == 0 ]]
+  then
+    exit 0
+  else
+    exit 1
+  fi
 else
-  exit 1
+  echo "# Please run your local E2E test suite now ..."
 fi
