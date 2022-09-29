@@ -8,6 +8,7 @@
   "scripts": {
     "start:local-server": "SKIP_TEST_SUITE=1 bash test.sh stable-server",
     "stop:local-server": "docker compose -f docker-compose.stable-server.yml kill && docker compose -f docker-compose.stable-server.yml rm -fv",
+    "test:sncrypto-web": "bash sncrypto-test.sh",
     "test:stable-server": "bash test.sh stable-server",
     "test:stable-client": "bash test.sh stable-client",
     "test:stable-client-and-server": "bash test.sh stable-client-and-server"

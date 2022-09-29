@@ -1,0 +1,26 @@
+name: SNCrypto Web
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        type: string
+        default: test
+        description: The Docker image tag used for SNCrypto container
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Run Test Suite
+        run: yarn test:sncrypto-web
+        env:
+          SNCRYPTO_TAG: ${{ inputs.image_tag }}
