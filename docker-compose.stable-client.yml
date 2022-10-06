@@ -74,6 +74,7 @@ services:
     entrypoint: [
       "./packages/api-gateway/wait-for.sh", "syncing-server-js", "3000",
       "./packages/api-gateway/wait-for.sh", "auth", "3000",
+      "./packages/api-gateway/wait-for.sh", "workspace", "3000",
       "./packages/api-gateway/wait-for.sh", "files", "3000",
       "./packages/api-gateway/docker/entrypoint.sh", "start-web"
     ]
@@ -116,3 +117,24 @@ services:
     env_file: docker/files.env
     volumes:
       - ./docker/uploads:/var/www/dist/src/Infra/FS/tmp
+
+  workspace:
+    image: standardnotes/workspace:${WORKSPACE_IMAGE_TAG}
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/workspace/wait-for.sh", "auth", "3000",
+      "./packages/workspace/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/workspace.env
+
+  workspace-worker:
+    image: standardnotes/workspace:${WORKSPACE_IMAGE_TAG}
+    depends_on:
+      - workspace
+    entrypoint: [
+      "./packages/workspace/wait-for.sh", "workspace", "3000",
+      "./packages/workspace/wait-for.sh", "localstack", "4566",
+      "./packages/workspace/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/workspace.env

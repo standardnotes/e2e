@@ -14,6 +14,7 @@ function setup {
   echo "# Copying the sample configuration files"
   cp docker/api-gateway.env.sample docker/api-gateway.env
   cp docker/auth.env.sample docker/auth.env
+  cp docker/workspace.env.sample docker/workspace.env
   cp docker/syncing-server-js.env.sample docker/syncing-server-js.env
   cp docker/mock-event-publisher.env.sample docker/mock-event-publisher.env
   cp docker/files.env.sample docker/files.env

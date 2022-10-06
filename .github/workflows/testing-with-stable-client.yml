@@ -15,6 +15,10 @@ on:
         type: string
         default: latest
         description: The Docker image tag used for Auth container
+      workspace_image_tag:
+        type: string
+        default: latest
+        description: The Docker image tag used for Workspace container
       files_image_tag:
         type: string
         default: latest
@@ -38,4 +42,5 @@ jobs:
           SYNCING_SERVER_JS_IMAGE_TAG: ${{ inputs.syncing_server_js_image_tag }}
           API_GATEWAY_IMAGE_TAG: ${{ inputs.api_gateway_image_tag }}
           AUTH_IMAGE_TAG: ${{ inputs.auth_image_tag }}
+          WORKSPACE_IMAGE_TAG: ${{ inputs.workspace_image_tag }}
           FILES_IMAGE_TAG: ${{ inputs.files_image_tag }}

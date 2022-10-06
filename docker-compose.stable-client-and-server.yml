@@ -74,6 +74,7 @@ services:
     entrypoint: [
       "./packages/api-gateway/wait-for.sh", "syncing-server-js", "3000",
       "./packages/api-gateway/wait-for.sh", "auth", "3000",
+      "./packages/api-gateway/wait-for.sh", "workspace", "3000",
       "./packages/api-gateway/wait-for.sh", "files", "3000",
       "./packages/api-gateway/docker/entrypoint.sh", "start-web"
     ]
@@ -103,6 +104,27 @@ services:
       "./packages/auth/docker/entrypoint.sh", "start-worker"
     ]
     env_file: docker/auth.env
+
+  workspace:
+    image: standardnotes/workspace
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/workspace/wait-for.sh", "auth", "3000",
+      "./packages/workspace/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/workspace.env
+
+  workspace-worker:
+    image: standardnotes/workspace
+    depends_on:
+      - workspace
+    entrypoint: [
+      "./packages/workspace/wait-for.sh", "workspace", "3000",
+      "./packages/workspace/wait-for.sh", "localstack", "4566",
+      "./packages/workspace/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/workspace.env
 
   files:
     image: standardnotes/files
