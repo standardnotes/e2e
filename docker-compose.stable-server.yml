@@ -9,8 +9,8 @@ services:
       MYSQL_ROOT_PASSWORD: testpassword
     expose:
       - 3306
-    restart: unless-stopped
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   localstack:
     image: localstack/localstack
