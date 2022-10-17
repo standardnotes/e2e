@@ -49,7 +49,7 @@ function startContainers {
 
 function waitForServices {
   attempt=0
-  while [ $attempt -le 90 ]; do
+  while [ $attempt -le 180 ]; do
       attempt=$(( $attempt + 1 ))
       echo "# Waiting for all services to be up (attempt: $attempt) ..."
       result=$(docker compose -f $COMPOSE_FILE logs api-gateway)
