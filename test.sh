@@ -18,6 +18,8 @@ function setup {
   cp docker/syncing-server-js.env.sample docker/syncing-server-js.env
   cp docker/mock-event-publisher.env.sample docker/mock-event-publisher.env
   cp docker/files.env.sample docker/files.env
+  cp docker/websockets.env.sample docker/websockets.env
+  cp docker/event-store.env.sample docker/event-store.env
 }
 
 function cleanup {
