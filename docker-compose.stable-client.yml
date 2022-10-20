@@ -138,3 +138,36 @@ services:
       "./packages/workspace/docker/entrypoint.sh", "start-worker"
     ]
     env_file: docker/workspace.env
+
+  websockets-worker:
+    image: standardnotes/websockets:${WEBSOCKETS_IMAGE_TAG}
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/websockets/wait-for.sh", "auth", "3000",
+      "./packages/websockets/wait-for.sh", "localstack", "4566",
+      "./packages/websockets/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/websockets.env
+
+  event-store:
+    image: standardnotes/event-store:${EVENT_STORE_IMAGE_TAG}
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/event-store/wait-for.sh", "auth", "3000",
+      "./packages/event-store/wait-for.sh", "localstack", "4566",
+      "./packages/event-store/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/event-store.env
+
+  scheduler:
+    image: standardnotes/scheduler:${SCHEDULER_IMAGE_TAG}
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/scheduler/wait-for.sh", "auth", "3000",
+      "./packages/scheduler/wait-for.sh", "localstack", "4566",
+      "./packages/scheduler/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/scheduler.env

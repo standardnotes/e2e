@@ -23,6 +23,18 @@ on:
         type: string
         default: latest
         description: The Docker image tag used for Files container
+      websockets_image_tag:
+        type: string
+        default: latest
+        description: The Docker image tag used for Websockets container
+      scheduler_image_tag:
+        type: string
+        default: latest
+        description: The Docker image tag used for Scheduler container
+      event_store_image_tag:
+        type: string
+        default: latest
+        description: The Docker image tag used for Event Store container
 
 jobs:
   e2e-tests:
@@ -44,3 +56,6 @@ jobs:
           AUTH_IMAGE_TAG: ${{ inputs.auth_image_tag }}
           WORKSPACE_IMAGE_TAG: ${{ inputs.workspace_image_tag }}
           FILES_IMAGE_TAG: ${{ inputs.files_image_tag }}
+          WEBSOCKETS_IMAGE_TAG: ${{ inputs.websockets_image_tag }}
+          EVENT_STORE_IMAGE_TAG: ${{ inputs.event_store_image_tag }}
+          SCHEDULER_IMAGE_TAG: ${{ inputs.scheduler_image_tag }}
