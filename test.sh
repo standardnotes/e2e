@@ -20,6 +20,7 @@ function setup {
   cp docker/files.env.sample docker/files.env
   cp docker/websockets.env.sample docker/websockets.env
   cp docker/event-store.env.sample docker/event-store.env
+  cp docker/scheduler.env.sample docker/scheduler.env
 }
 
 function cleanup {
