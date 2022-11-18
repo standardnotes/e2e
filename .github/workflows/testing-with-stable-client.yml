@@ -39,6 +39,10 @@ on:
         type: string
         default: latest
         description: The Docker image tag used for Analytics container
+      revisions_image_tag:
+        type: string
+        default: latest
+        description: The Docker image tag used for Revisions container
 
 jobs:
   e2e-tests:
@@ -64,3 +68,4 @@ jobs:
           EVENT_STORE_IMAGE_TAG: ${{ inputs.event_store_image_tag }}
           SCHEDULER_IMAGE_TAG: ${{ inputs.scheduler_image_tag }}
           ANALYTICS_IMAGE_TAG: ${{ inputs.analytics_image_tag }}
+          REVISIONS_IMAGE_TAG: ${{ inputs.revisions_image_tag }}
