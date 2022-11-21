@@ -4,6 +4,7 @@ docker/files.env
 docker/mock-event-publisher.env
 docker/syncing-server-js.env
 docker/workspace.env
+docker/revisions.env
 
 **/.pnp.*
 **/.yarn/*
