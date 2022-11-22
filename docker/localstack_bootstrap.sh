@@ -42,62 +42,51 @@ get_topic_arn_from_name() {
   echo "arn:aws:sns:${AWS_REGION}:${LOCALSTACK_DUMMY_ID}:$TOPIC_NAME"
 }
 
-QUEUE_NAME="auth-local-queue"
-TOPIC_NAME="auth-local-topic"
+TOPIC_NAME="local-topic"
 
 echo "creating topic $TOPIC_NAME"
 TOPIC_CREATED_RESULT=$(create_topic ${TOPIC_NAME})
 echo "created topic: $TOPIC_CREATED_RESULT"
-AUTH_TOPIC_ARN=$(get_topic_arn_from_name $TOPIC_NAME)
+TOPIC_ARN=$(get_topic_arn_from_name $TOPIC_NAME)
+
+QUEUE_NAME="auth-local-queue"
 
 echo "creating queue $QUEUE_NAME"
 QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 AUTH_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $AUTH_TOPIC_ARN to queue $AUTH_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $AUTH_TOPIC_ARN $AUTH_QUEUE_ARN)
+echo "linking topic $TOPIC_ARN to queue $AUTH_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $AUTH_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
 QUEUE_NAME="syncing-server-local-queue"
-TOPIC_NAME="syncing-server-local-topic"
-
-echo "creating topic $TOPIC_NAME"
-TOPIC_CREATED_RESULT=$(create_topic ${TOPIC_NAME})
-echo "created topic: $TOPIC_CREATED_RESULT"
-SYNCING_SERVER_TOPIC_ARN=$(get_topic_arn_from_name $TOPIC_NAME)
 
 echo "creating queue $QUEUE_NAME"
 QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 SYNCING_SERVER_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $SYNCING_SERVER_TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $SYNCING_SERVER_TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
+echo "linking topic $TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
 QUEUE_NAME="revisions-server-local-queue"
-TOPIC_NAME="revisions-server-local-topic"
-
-echo "creating topic $TOPIC_NAME"
-TOPIC_CREATED_RESULT=$(create_topic ${TOPIC_NAME})
-echo "created topic: $TOPIC_CREATED_RESULT"
-REVISIONS_TOPIC_ARN=$(get_topic_arn_from_name $TOPIC_NAME)
 
 echo "creating queue $QUEUE_NAME"
 QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 REVISIONS_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $REVISIONS_TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $REVISIONS_TOPIC_ARN $REVISIONS_QUEUE_ARN)
+echo "linking topic $TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $REVISIONS_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
-echo "linking topic $SYNCING_SERVER_TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $SYNCING_SERVER_TOPIC_ARN $REVISIONS_QUEUE_ARN)
+echo "linking topic $TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $REVISIONS_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
