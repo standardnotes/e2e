@@ -22,6 +22,7 @@ function setup {
   cp docker/event-store.env.sample docker/event-store.env
   cp docker/scheduler.env.sample docker/scheduler.env
   cp docker/analytics.env.sample docker/analytics.env
+  cp docker/revisions.env.sample docker/revisions.env
 }
 
 function cleanup {
