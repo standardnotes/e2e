@@ -65,6 +65,10 @@ services:
       "./packages/syncing-server/docker/entrypoint.sh", "start-worker"
     ]
     env_file: docker/syncing-server-js.env
+    environment:
+      FILE_UPLOAD_PATH: /workspace/packages/syncing-server/uploads/
+    volumes:
+      - file-uploads:/workspace/packages/syncing-server/uploads/
 
   api-gateway:
     image: standardnotes/api-gateway
@@ -137,4 +141,31 @@ services:
       - 3125:3000
     env_file: docker/files.env
     volumes:
-      - ./docker/uploads:/var/www/dist/src/Infra/FS/tmp
+      - file-uploads:/workspace/packages/files/uploads/
+
+  revisions:
+    image: standardnotes/revisions
+    depends_on:
+      - syncing-server-js
+    entrypoint: [
+      "./packages/revisions/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/revisions/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/revisions.env
+
+  revisions-worker:
+    image: standardnotes/revisions
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/revisions/wait-for.sh", "revisions", "3000",
+      "./packages/revisions/wait-for.sh", "localstack", "4566",
+      "./packages/revisions/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/revisions.env
+    volumes:
+      - file-uploads:/workspace/packages/revisions/uploads/
+
+volumes:
+  file-uploads:
+
