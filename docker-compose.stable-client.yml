@@ -188,28 +188,28 @@ services:
     ]
     env_file: docker/scheduler.env
 
-  # revisions:
-  #   image: standardnotes/revisions:${REVISIONS_IMAGE_TAG}
-  #   depends_on:
-  #     - syncing-server-js
-  #   entrypoint: [
-  #     "./packages/revisions/wait-for.sh", "syncing-server-js", "3000",
-  #     "./packages/revisions/docker/entrypoint.sh", "start-web"
-  #   ]
-  #   env_file: docker/revisions.env
+  revisions:
+    image: standardnotes/revisions:${REVISIONS_IMAGE_TAG}
+    depends_on:
+      - syncing-server-js
+    entrypoint: [
+      "./packages/revisions/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/revisions/docker/entrypoint.sh", "start-web"
+    ]
+    env_file: docker/revisions.env
 
-  # revisions-worker:
-  #   image: standardnotes/revisions:${REVISIONS_IMAGE_TAG}
-  #   depends_on:
-  #     - auth
-  #   entrypoint: [
-  #     "./packages/revisions/wait-for.sh", "revisions", "3000",
-  #     "./packages/revisions/wait-for.sh", "localstack", "4566",
-  #     "./packages/revisions/docker/entrypoint.sh", "start-worker"
-  #   ]
-  #   env_file: docker/revisions.env
-  #   volumes:
-  #     - file-uploads:/workspace/packages/revisions/uploads/
+  revisions-worker:
+    image: standardnotes/revisions:${REVISIONS_IMAGE_TAG}
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/revisions/wait-for.sh", "revisions", "3000",
+      "./packages/revisions/wait-for.sh", "localstack", "4566",
+      "./packages/revisions/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/revisions.env
+    volumes:
+      - file-uploads:/workspace/packages/revisions/uploads/
 
 volumes:
   file-uploads:
