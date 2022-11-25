@@ -53,6 +53,7 @@ services:
     image: standardnotes/syncing-server-js:${SYNCING_SERVER_JS_IMAGE_TAG}
     entrypoint: [
       "./packages/syncing-server/wait-for.sh", "db", "3306",
+      "./packages/syncing-server/wait-for.sh", "localstack", "4566",
       "./packages/syncing-server/wait-for.sh", "cache", "6379",
       "./packages/syncing-server/docker/entrypoint.sh", "start-web"
     ]
@@ -64,6 +65,7 @@ services:
       - syncing-server-js
     entrypoint: [
       "./packages/syncing-server/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/syncing-server/wait-for.sh", "localstack", "4566",
       "./packages/syncing-server/docker/entrypoint.sh", "start-worker"
     ]
     env_file: docker/syncing-server-js.env
@@ -82,6 +84,7 @@ services:
       "./packages/api-gateway/wait-for.sh", "auth", "3000",
       "./packages/api-gateway/wait-for.sh", "workspace", "3000",
       "./packages/api-gateway/wait-for.sh", "files", "3000",
+      "./packages/api-gateway/wait-for.sh", "revisions", "3000",
       "./packages/api-gateway/docker/entrypoint.sh", "start-web"
     ]
     env_file: docker/api-gateway.env
@@ -96,12 +99,15 @@ services:
       - syncing-server-js
     entrypoint: [
       "./packages/auth/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/auth/wait-for.sh", "localstack", "4566",
       "./packages/auth/docker/entrypoint.sh", "start-web"
     ]
     env_file: docker/auth.env
 
   auth-worker:
     image: standardnotes/auth:${AUTH_IMAGE_TAG}
+    deploy:
+      scale: 3
     depends_on:
       - auth
     entrypoint: [
@@ -116,10 +122,24 @@ services:
     entrypoint: [
       "./packages/files/wait-for.sh", "db", "3306",
       "./packages/files/wait-for.sh", "cache", "6379",
+      "./packages/files/wait-for.sh", "localstack", "4566",
       "./packages/files/docker/entrypoint.sh", "start-web"
     ]
     ports:
       - 3125:3000
+    env_file: docker/files.env
+    volumes:
+      - file-uploads:/workspace/packages/files/uploads/
+
+  files-worker:
+    image: standardnotes/files
+    depends_on:
+      - files
+    entrypoint: [
+      "./packages/files/wait-for.sh", "files", "3000",
+      "./packages/files/wait-for.sh", "localstack", "4566",
+      "./packages/files/docker/entrypoint.sh", "start-worker"
+    ]
     env_file: docker/files.env
     volumes:
       - file-uploads:/workspace/packages/files/uploads/
@@ -130,6 +150,7 @@ services:
       - auth
     entrypoint: [
       "./packages/workspace/wait-for.sh", "auth", "3000",
+      "./packages/workspace/wait-for.sh", "localstack", "4566",
       "./packages/workspace/docker/entrypoint.sh", "start-web"
     ]
     env_file: docker/workspace.env
@@ -162,6 +183,7 @@ services:
       - auth
     entrypoint: [
       "./packages/websockets/wait-for.sh", "websockets", "3000",
+      "./packages/websockets/wait-for.sh", "localstack", "4566",
       "./packages/websockets/docker/entrypoint.sh", "start-worker"
     ]
     env_file: docker/websockets.env
@@ -194,6 +216,7 @@ services:
       - syncing-server-js
     entrypoint: [
       "./packages/revisions/wait-for.sh", "syncing-server-js", "3000",
+      "./packages/revisions/wait-for.sh", "localstack", "4566",
       "./packages/revisions/docker/entrypoint.sh", "start-web"
     ]
     env_file: docker/revisions.env
