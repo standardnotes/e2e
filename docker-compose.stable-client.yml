@@ -104,10 +104,19 @@ services:
     ]
     env_file: docker/auth.env
 
-  auth-worker:
+  auth-worker-1:
     image: standardnotes/auth:${AUTH_IMAGE_TAG}
-    deploy:
-      scale: 3
+    depends_on:
+      - auth
+    entrypoint: [
+      "./packages/auth/wait-for.sh", "auth", "3000",
+      "./packages/auth/wait-for.sh", "localstack", "4566",
+      "./packages/auth/docker/entrypoint.sh", "start-worker"
+    ]
+    env_file: docker/auth.env
+
+  auth-worker-2:
+    image: standardnotes/auth:${AUTH_IMAGE_TAG}
     depends_on:
       - auth
     entrypoint: [
