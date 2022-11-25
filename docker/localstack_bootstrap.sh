@@ -118,11 +118,11 @@ echo "created queue: $QUEUE_URL"
 AUTH_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
 echo "linking topic $PAYMENTS_TOPIC_ARN to queue $AUTH_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $AUTH_QUEUE_ARN)
+LINKING_RESULT=$(link_queue_and_topic $PAYMENTS_TOPIC_ARN $AUTH_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 echo "linking topic $AUTH_TOPIC_ARN to queue $AUTH_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $AUTH_QUEUE_ARN)
+LINKING_RESULT=$(link_queue_and_topic $AUTH_TOPIC_ARN $AUTH_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
