@@ -42,12 +42,61 @@ get_topic_arn_from_name() {
   echo "arn:aws:sns:${AWS_REGION}:${LOCALSTACK_DUMMY_ID}:$TOPIC_NAME"
 }
 
-TOPIC_NAME="local-topic"
+PAYMENTS_TOPIC_NAME="payments-local-topic"
 
-echo "creating topic $TOPIC_NAME"
-TOPIC_CREATED_RESULT=$(create_topic ${TOPIC_NAME})
+echo "creating topic $PAYMENTS_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${PAYMENTS_TOPIC_NAME})
 echo "created topic: $TOPIC_CREATED_RESULT"
-TOPIC_ARN=$(get_topic_arn_from_name $TOPIC_NAME)
+PAYMENTS_TOPIC_ARN=$(get_topic_arn_from_name $PAYMENTS_TOPIC_NAME)
+
+SYNCING_SERVER_TOPIC_NAME="syncing-server-local-topic"
+
+echo "creating topic $SYNCING_SERVER_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${SYNCING_SERVER_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+SYNCING_SERVER_TOPIC_ARN=$(get_topic_arn_from_name $SYNCING_SERVER_TOPIC_NAME)
+
+AUTH_TOPIC_NAME="auth-local-topic"
+
+echo "creating topic $AUTH_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${AUTH_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+AUTH_TOPIC_ARN=$(get_topic_arn_from_name $AUTH_TOPIC_NAME)
+
+FILES_TOPIC_NAME="files-local-topic"
+
+echo "creating topic $FILES_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${FILES_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+FILES_TOPIC_ARN=$(get_topic_arn_from_name $FILES_TOPIC_NAME)
+
+ANALYTICS_TOPIC_NAME="analytics-local-topic"
+
+echo "creating topic $ANALYTICS_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${ANALYTICS_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+ANALYTICS_TOPIC_ARN=$(get_topic_arn_from_name $ANALYTICS_TOPIC_NAME)
+
+REVISIONS_TOPIC_NAME="revisions-server-local-topic"
+
+echo "creating topic $REVISIONS_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${REVISIONS_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+REVISIONS_TOPIC_ARN=$(get_topic_arn_from_name $REVISIONS_TOPIC_NAME)
+
+SCHEDULER_TOPIC_NAME="scheduler-local-topic"
+
+echo "creating topic $SCHEDULER_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${SCHEDULER_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+SCHEDULER_TOPIC_ARN=$(get_topic_arn_from_name $SCHEDULER_TOPIC_NAME)
+
+WORKSPACE_TOPIC_NAME="workspace-local-topic"
+
+echo "creating topic $WORKSPACE_TOPIC_NAME"
+TOPIC_CREATED_RESULT=$(create_topic ${WORKSPACE_TOPIC_NAME})
+echo "created topic: $TOPIC_CREATED_RESULT"
+WORKSPACE_TOPIC_ARN=$(get_topic_arn_from_name $WORKSPACE_TOPIC_NAME)
 
 QUEUE_NAME="analytics-local-queue"
 
@@ -56,8 +105,8 @@ QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 ANALYTICS_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $TOPIC_ARN to queue $ANALYTICS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $ANALYTICS_QUEUE_ARN)
+echo "linking topic $PAYMENTS_TOPIC_ARN to queue $ANALYTICS_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $PAYMENTS_TOPIC_ARN $ANALYTICS_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
@@ -68,20 +117,12 @@ QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 AUTH_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $TOPIC_ARN to queue $AUTH_QUEUE_ARN"
+echo "linking topic $PAYMENTS_TOPIC_ARN to queue $AUTH_QUEUE_ARN"
 LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $AUTH_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
-
-QUEUE_NAME="event-store-local-queue"
-
-echo "creating queue $QUEUE_NAME"
-QUEUE_URL=$(create_queue ${QUEUE_NAME})
-echo "created queue: $QUEUE_URL"
-EVENT_STORE_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
-
-echo "linking topic $TOPIC_ARN to queue $EVENT_STORE_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $EVENT_STORE_QUEUE_ARN)
+echo "linking topic $AUTH_TOPIC_ARN to queue $AUTH_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $AUTH_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
@@ -92,20 +133,8 @@ QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 FILES_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $TOPIC_ARN to queue $FILES_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $FILES_QUEUE_ARN)
-echo "linking done:"
-echo "$LINKING_RESULT"
-
-QUEUE_NAME="scheduler-local-queue"
-
-echo "creating queue $QUEUE_NAME"
-QUEUE_URL=$(create_queue ${QUEUE_NAME})
-echo "created queue: $QUEUE_URL"
-SCHEDULER_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
-
-echo "linking topic $TOPIC_ARN to queue $SCHEDULER_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $SCHEDULER_QUEUE_ARN)
+echo "linking topic $AUTH_TOPIC_ARN to queue $FILES_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $AUTH_TOPIC_ARN $FILES_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
@@ -116,32 +145,17 @@ QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 SYNCING_SERVER_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
+echo "linking topic $SYNCING_SERVER_TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $SYNCING_SERVER_TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
-QUEUE_NAME="websockets-local-queue"
-
-echo "creating queue $QUEUE_NAME"
-QUEUE_URL=$(create_queue ${QUEUE_NAME})
-echo "created queue: $QUEUE_URL"
-WEBSOCKETS_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
-
-echo "linking topic $TOPIC_ARN to queue $WEBSOCKETS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $WEBSOCKETS_QUEUE_ARN)
+echo "linking topic $SYNCING_SERVER_TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $SYNCING_SERVER_TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
-
-QUEUE_NAME="workspace-local-queue"
-
-echo "creating queue $QUEUE_NAME"
-QUEUE_URL=$(create_queue ${QUEUE_NAME})
-echo "created queue: $QUEUE_URL"
-WORKSPACE_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
-
-echo "linking topic $TOPIC_ARN to queue $WORKSPACE_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $WORKSPACE_QUEUE_ARN)
+echo "linking topic $AUTH_TOPIC_ARN to queue $SYNCING_SERVER_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $AUTH_TOPIC_ARN $SYNCING_SERVER_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
@@ -152,15 +166,24 @@ QUEUE_URL=$(create_queue ${QUEUE_NAME})
 echo "created queue: $QUEUE_URL"
 REVISIONS_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
-echo "linking topic $TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $REVISIONS_QUEUE_ARN)
+echo "linking topic $SYNCING_SERVER_TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
+LINKING_RESULT=$(link_queue_and_topic $SYNCING_SERVER_TOPIC_ARN $REVISIONS_QUEUE_ARN)
 echo "linking done:"
 echo "$LINKING_RESULT"
 
-echo "linking topic $TOPIC_ARN to queue $REVISIONS_QUEUE_ARN"
-LINKING_RESULT=$(link_queue_and_topic $TOPIC_ARN $REVISIONS_QUEUE_ARN)
-echo "linking done:"
-echo "$LINKING_RESULT"
+QUEUE_NAME="scheduler-local-queue"
+
+echo "creating queue $QUEUE_NAME"
+QUEUE_URL=$(create_queue ${QUEUE_NAME})
+echo "created queue: $QUEUE_URL"
+SCHEDULER_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
+
+QUEUE_NAME="workspace-local-queue"
+
+echo "creating queue $QUEUE_NAME"
+QUEUE_URL=$(create_queue ${QUEUE_NAME})
+echo "created queue: $QUEUE_URL"
+WORKSPACE_QUEUE_ARN=$(get_queue_arn_from_name $QUEUE_NAME)
 
 echo "all topics are:"
 echo "$(get_all_topics)"
