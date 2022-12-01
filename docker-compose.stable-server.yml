@@ -25,8 +25,8 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - HOSTNAME_EXTERNAL=localstack
     volumes:
-      - ./docker/localstack_bootstrap.sh:/docker-entrypoint-initaws.d/localstack_bootstrap.sh
-      - /tmp/localstack:/tmp/localstack
+      - ./docker/localstack_bootstrap.sh:/etc/localstack/init/ready.d/localstack_bootstrap.sh
+      - ./docker/localstack:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
   mock-event-publisher:
